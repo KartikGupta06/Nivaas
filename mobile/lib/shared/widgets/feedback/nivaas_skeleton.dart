@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/config/theme/color_palette.dart';
 import '../../../app/config/theme/radius_system.dart';
 
-/// Reusable Skeleton Shimmer Loader matching card & list layout shapes.
+/// Reusable Skeleton Shimmer Loader matching card & list layout shapes with accessibility exclusion.
 class NivaasSkeleton extends StatefulWidget {
   final double width;
   final double height;
@@ -56,18 +56,21 @@ class _NivaasSkeletonState extends State<NivaasSkeleton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            color: ColorPalette.outline.withValues(alpha: _animation.value),
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-          ),
-        );
-      },
+    return Semantics(
+      excludeSemantics: true,
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return Container(
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: ColorPalette.outline.withValues(alpha: _animation.value),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -14,7 +14,7 @@ enum NivaasStatusType {
   custom,
 }
 
-/// Color-Coded Status Chip matching DESIGN_SYSTEM.md section 16.10 & 35.
+/// Color-Coded Status Chip matching DESIGN_SYSTEM.md section 16.10 & 35 with accessibility semantics.
 class NivaasStatusChip extends StatelessWidget {
   final String label;
   final NivaasStatusType type;
@@ -63,20 +63,23 @@ class NivaasStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = _getChipColors();
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: SpacingSystem.s,
-        vertical: SpacingSystem.xs,
-      ),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: RadiusSystem.radiusS,
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: TypographyScale.caption.copyWith(
-          color: colors.textColor,
-          fontWeight: FontWeight.w700,
+    return Semantics(
+      label: 'Status $label',
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SpacingSystem.s,
+          vertical: SpacingSystem.xs,
+        ),
+        decoration: BoxDecoration(
+          color: colors.background,
+          borderRadius: RadiusSystem.radiusS,
+        ),
+        child: Text(
+          label.toUpperCase(),
+          style: TypographyScale.caption.copyWith(
+            color: colors.textColor,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );

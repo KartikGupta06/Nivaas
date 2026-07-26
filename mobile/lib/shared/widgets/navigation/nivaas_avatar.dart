@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/config/theme/color_palette.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Circle Avatar with fallback initials.
+/// Reusable Circle Avatar with fallback initials & screen reader semantics.
 class NivaasAvatar extends StatelessWidget {
   final String name;
   final String? imageUrl;
@@ -27,25 +27,32 @@ class NivaasAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget avatarWidget;
+
     if (imageUrl != null && imageUrl!.isNotEmpty) {
-      return CircleAvatar(
+      avatarWidget = CircleAvatar(
         radius: radius,
         backgroundImage: NetworkImage(imageUrl!),
         backgroundColor: ColorPalette.primaryContainer,
       );
+    } else {
+      avatarWidget = CircleAvatar(
+        radius: radius,
+        backgroundColor: ColorPalette.primaryContainer,
+        child: Text(
+          _initials,
+          style: TypographyScale.caption.copyWith(
+            color: ColorPalette.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: radius * 0.8,
+          ),
+        ),
+      );
     }
 
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: ColorPalette.primaryContainer,
-      child: Text(
-        _initials,
-        style: TypographyScale.caption.copyWith(
-          color: ColorPalette.primary,
-          fontWeight: FontWeight.w700,
-          fontSize: radius * 0.8,
-        ),
-      ),
+    return Semantics(
+      label: 'Profile picture of $name',
+      child: avatarWidget,
     );
   }
 }

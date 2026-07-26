@@ -188,13 +188,15 @@ class NivaasButton extends StatelessWidget {
         break;
     }
 
-    if (!isFullWidth) {
-      return buttonWidget;
-    }
+    final resultWidget = isFullWidth
+        ? SizedBox(width: double.infinity, child: buttonWidget)
+        : buttonWidget;
 
-    return SizedBox(
-      width: double.infinity,
-      child: buttonWidget,
+    return Semantics(
+      button: true,
+      enabled: !isDisabled && !isLoading,
+      label: label,
+      child: resultWidget,
     );
   }
 
