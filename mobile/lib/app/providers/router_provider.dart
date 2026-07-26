@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/design_showcase/presentation/design_showcase_screen.dart';
 import '../../shared/widgets/placeholder_view.dart';
 import '../config/routes/route_names.dart';
@@ -8,7 +10,7 @@ import '../observers/app_route_observer.dart';
 import 'auth_state_provider.dart';
 import 'logger_provider.dart';
 
-/// Riverpod Memoized Router Provider preventing router re-instantiation on widget rebuilds.
+/// Declarative GoRouter Provider with Auth & Role Navigation Guards.
 final routerProvider = Provider<GoRouter>((ref) {
   final logger = ref.watch(loggerProvider);
 
@@ -29,37 +31,31 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: RouteNames.splash,
-        builder: (context, state) => const PlaceholderView(
-          title: 'Nivaas',
-          description: 'Architecture Infrastructure Shell Ready',
-        ),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: RouteNames.auth,
-        builder: (context, state) => const PlaceholderView(
-          title: 'Authentication',
-          description: 'OTP Verification Shell',
-        ),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: RouteNames.residentHome,
         builder: (context, state) => const PlaceholderView(
-          title: 'Resident Dashboard',
-          description: 'Resident Workspace Foundation',
+          title: 'Resident Workspace',
+          description: 'Resident Dashboard & Core Features Foundation',
         ),
       ),
       GoRoute(
         path: RouteNames.adminHome,
         builder: (context, state) => const PlaceholderView(
-          title: 'Admin Dashboard',
-          description: 'Society Admin Workspace Foundation',
+          title: 'Society Admin Workspace',
+          description: 'RWA Administration & Society Management Shell',
         ),
       ),
       GoRoute(
         path: RouteNames.watchmanHome,
         builder: (context, state) => const PlaceholderView(
           title: 'Gate Security Stream',
-          description: 'Watchman High-Contrast Workspace Foundation',
+          description: 'High-Contrast Gate Entry Check-in Shell',
         ),
       ),
       GoRoute(
