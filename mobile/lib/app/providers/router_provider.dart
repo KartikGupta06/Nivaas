@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/design_showcase/presentation/design_showcase_screen.dart';
 import '../../shared/widgets/placeholder_view.dart';
 import '../config/routes/route_names.dart';
 import '../observers/app_route_observer.dart';
@@ -18,8 +19,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final authState = ref.read(authStateProvider);
       final isAuthRoute = state.matchedLocation == RouteNames.auth;
       final isSplashRoute = state.matchedLocation == RouteNames.splash;
+      final isShowcaseRoute = state.matchedLocation == RouteNames.designShowcase;
 
-      if (!authState.isAuthenticated && !isAuthRoute && !isSplashRoute) {
+      if (!authState.isAuthenticated && !isAuthRoute && !isSplashRoute && !isShowcaseRoute) {
         return RouteNames.auth;
       }
       return null;
@@ -59,6 +61,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Gate Security Stream',
           description: 'Watchman High-Contrast Workspace Foundation',
         ),
+      ),
+      GoRoute(
+        path: RouteNames.designShowcase,
+        builder: (context, state) => const DesignShowcaseScreen(),
       ),
     ],
   );

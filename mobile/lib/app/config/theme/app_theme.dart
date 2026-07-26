@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'color_palette.dart';
 import 'radius_system.dart';
+import 'semantic_colors.dart';
 import 'spacing_system.dart';
 import 'typography_scale.dart';
 
@@ -12,6 +13,9 @@ abstract class AppTheme {
       brightness: Brightness.light,
       fontFamily: TypographyScale.fontFamily,
       scaffoldBackgroundColor: ColorPalette.background,
+      extensions: const [
+        SemanticColors.light,
+      ],
       colorScheme: const ColorScheme.light(
         primary: ColorPalette.primary,
         onPrimary: Colors.white,
@@ -98,6 +102,9 @@ abstract class AppTheme {
       brightness: Brightness.dark,
       fontFamily: TypographyScale.fontFamily,
       scaffoldBackgroundColor: ColorPalette.darkBackground,
+      extensions: const [
+        SemanticColors.dark,
+      ],
       colorScheme: const ColorScheme.dark(
         primary: ColorPalette.darkPrimary,
         onPrimary: ColorPalette.darkBackground,
