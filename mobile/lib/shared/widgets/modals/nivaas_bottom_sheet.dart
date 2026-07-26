@@ -4,7 +4,7 @@ import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Modal Bottom Sheet Container matching DESIGN_SYSTEM.md section 16.6.
+/// Premium Modal Bottom Sheet Container (24dp top radius & drag handle pill).
 class NivaasBottomSheet extends StatelessWidget {
   final String title;
   final Widget child;
@@ -44,14 +44,13 @@ class NivaasBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Drag handle pill
             Center(
               child: Container(
-                width: 32.0,
+                width: 36.0,
                 height: 4.0,
-                margin: const EdgeInsets.symmetric(vertical: SpacingSystem.s),
+                margin: const EdgeInsets.symmetric(vertical: 12.0),
                 decoration: BoxDecoration(
-                  color: ColorPalette.outline,
+                  color: ColorPalette.outlineVariant,
                   borderRadius: BorderRadius.circular(2.0),
                 ),
               ),

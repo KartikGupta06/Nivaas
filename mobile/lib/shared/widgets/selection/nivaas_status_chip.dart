@@ -14,7 +14,7 @@ enum NivaasStatusType {
   custom,
 }
 
-/// Color-Coded Status Chip matching DESIGN_SYSTEM.md section 16.10 & 35 with accessibility semantics.
+/// Premium Color-Coded Full Pill Status Chip Component.
 class NivaasStatusChip extends StatelessWidget {
   final String label;
   final NivaasStatusType type;
@@ -67,19 +67,34 @@ class NivaasStatusChip extends StatelessWidget {
       label: 'Status $label',
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: SpacingSystem.s,
-          vertical: SpacingSystem.xs,
+          horizontal: 10.0,
+          vertical: 4.0,
         ),
         decoration: BoxDecoration(
           color: colors.background,
-          borderRadius: RadiusSystem.radiusS,
+          borderRadius: RadiusSystem.radiusPill,
         ),
-        child: Text(
-          label.toUpperCase(),
-          style: TypographyScale.caption.copyWith(
-            color: colors.textColor,
-            fontWeight: FontWeight.w700,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 6.0,
+              height: 6.0,
+              decoration: BoxDecoration(
+                color: colors.textColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: SpacingSystem.xs),
+            Text(
+              label.toUpperCase(),
+              style: TypographyScale.caption.copyWith(
+                color: colors.textColor,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -109,14 +124,14 @@ class NivaasStatusChip extends StatelessWidget {
 
       case NivaasStatusType.exited:
         return (
-          background: const Color(0xFFE1E3E1),
+          background: ColorPalette.surfaceSubtle,
           textColor: ColorPalette.textSecondary,
         );
 
       case NivaasStatusType.custom:
         return (
-          background: customBackground ?? ColorPalette.primaryContainer,
-          textColor: customText ?? ColorPalette.primary,
+          background: customBackground ?? ColorPalette.infoContainer,
+          textColor: customText ?? ColorPalette.info,
         );
     }
   }

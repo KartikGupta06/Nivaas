@@ -12,7 +12,7 @@ enum NivaasButtonVariant {
   danger,
 }
 
-/// Reusable Production-Ready Button Widget matching DESIGN_SYSTEM.md guidelines.
+/// Premium Reusable Button Widget with full pill shapes and high readability.
 class NivaasButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -93,10 +93,10 @@ class NivaasButton extends StatelessWidget {
       children: [
         if (isLoading) ...[
           SizedBox(
-            width: 20.0,
-            height: 20.0,
+            width: 18.0,
+            height: 18.0,
             child: CircularProgressIndicator(
-              strokeWidth: 2.5,
+              strokeWidth: 2.0,
               valueColor: AlwaysStoppedAnimation<Color>(
                 _getLoadingColor(),
               ),
@@ -104,7 +104,7 @@ class NivaasButton extends StatelessWidget {
           ),
           const SizedBox(width: SpacingSystem.s),
         ] else if (icon != null) ...[
-          Icon(icon, size: 20.0),
+          Icon(icon, size: 18.0),
           const SizedBox(width: SpacingSystem.s),
         ],
         Text(
@@ -128,7 +128,7 @@ class NivaasButton extends StatelessWidget {
             disabledForegroundColor: ColorPalette.textDisabled,
             elevation: 0,
             minimumSize: const Size.fromHeight(SpacingSystem.minTouchTarget),
-            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusM),
+            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusPill),
           ),
           onPressed: effectiveOnPressed,
           child: child,
@@ -138,11 +138,11 @@ class NivaasButton extends StatelessWidget {
       case NivaasButtonVariant.secondary:
         buttonWidget = ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: ColorPalette.primaryContainer,
-            foregroundColor: ColorPalette.primary,
+            backgroundColor: ColorPalette.surfaceSubtle,
+            foregroundColor: ColorPalette.textPrimary,
             elevation: 0,
             minimumSize: const Size.fromHeight(SpacingSystem.minTouchTarget),
-            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusM),
+            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusPill),
           ),
           onPressed: effectiveOnPressed,
           child: child,
@@ -152,10 +152,10 @@ class NivaasButton extends StatelessWidget {
       case NivaasButtonVariant.outlined:
         buttonWidget = OutlinedButton(
           style: OutlinedButton.styleFrom(
-            foregroundColor: ColorPalette.primary,
-            side: const BorderSide(color: ColorPalette.primary, width: 1.0),
+            foregroundColor: ColorPalette.textPrimary,
+            side: const BorderSide(color: ColorPalette.outline, width: 1.0),
             minimumSize: const Size.fromHeight(SpacingSystem.minTouchTarget),
-            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusM),
+            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusPill),
           ),
           onPressed: effectiveOnPressed,
           child: child,
@@ -165,8 +165,9 @@ class NivaasButton extends StatelessWidget {
       case NivaasButtonVariant.text:
         buttonWidget = TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: ColorPalette.primary,
+            foregroundColor: ColorPalette.primaryAccent,
             minimumSize: const Size(SpacingSystem.minTouchTarget, SpacingSystem.minTouchTarget),
+            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusPill),
           ),
           onPressed: effectiveOnPressed,
           child: child,
@@ -180,7 +181,7 @@ class NivaasButton extends StatelessWidget {
             foregroundColor: Colors.white,
             elevation: 0,
             minimumSize: const Size.fromHeight(SpacingSystem.minTouchTarget),
-            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusM),
+            shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.radiusPill),
           ),
           onPressed: effectiveOnPressed,
           child: child,
@@ -208,8 +209,9 @@ class NivaasButton extends StatelessWidget {
         return Colors.white;
       case NivaasButtonVariant.secondary:
       case NivaasButtonVariant.outlined:
+        return ColorPalette.textPrimary;
       case NivaasButtonVariant.text:
-        return ColorPalette.primary;
+        return ColorPalette.primaryAccent;
     }
   }
 
@@ -221,7 +223,7 @@ class NivaasButton extends StatelessWidget {
       case NivaasButtonVariant.secondary:
       case NivaasButtonVariant.outlined:
       case NivaasButtonVariant.text:
-        return ColorPalette.primary;
+        return ColorPalette.textPrimary;
     }
   }
 }

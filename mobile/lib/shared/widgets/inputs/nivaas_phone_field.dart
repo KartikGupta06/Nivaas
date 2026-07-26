@@ -5,18 +5,18 @@ import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Indian Phone Number Field with +91 country prefix tile.
+/// Premium Mobile Phone Input with Indian Flag +91 prefix tile.
 class NivaasPhoneField extends StatelessWidget {
   final TextEditingController? controller;
-  final ValueChanged<String>? onChanged;
   final String? errorText;
+  final ValueChanged<String>? onChanged;
   final bool enabled;
 
   const NivaasPhoneField({
     super.key,
     this.controller,
-    this.onChanged,
     this.errorText,
+    this.onChanged,
     this.enabled = true,
   });
 
@@ -33,48 +33,55 @@ class NivaasPhoneField extends StatelessWidget {
         const SizedBox(height: SpacingSystem.xs),
         TextFormField(
           controller: controller,
-          onChanged: onChanged,
           enabled: enabled,
           keyboardType: TextInputType.phone,
           maxLength: 10,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(10),
           ],
-          style: TypographyScale.bodyLarge,
+          style: TypographyScale.bodyLarge.copyWith(fontWeight: FontWeight.w600),
+          onChanged: onChanged,
           decoration: InputDecoration(
-            hintText: '98765 43210',
-            errorText: errorText,
             counterText: '',
+            hintText: '9876543210',
+            hintStyle: TypographyScale.bodyLarge.copyWith(color: ColorPalette.textMuted),
+            errorText: errorText,
+            filled: true,
+            fillColor: ColorPalette.surface,
             prefixIcon: Container(
-              padding: const EdgeInsets.symmetric(horizontal: SpacingSystem.m),
-              margin: const EdgeInsets.only(right: SpacingSystem.s),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              margin: const EdgeInsets.only(right: 12.0),
               decoration: const BoxDecoration(
                 border: Border(
                   right: BorderSide(color: ColorPalette.outline, width: 1.0),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('🇮🇳', style: TextStyle(fontSize: 18.0)),
-                  SizedBox(width: 6.0),
+                  const Text('🇮🇳', style: TextStyle(fontSize: 18.0)),
+                  const SizedBox(width: 6.0),
                   Text(
                     '+91',
-                    style: TypographyScale.headingSmall,
+                    style: TypographyScale.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: ColorPalette.textPrimary,
+                    ),
                   ),
                 ],
               ),
             ),
-            filled: true,
-            fillColor: ColorPalette.surface,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: SpacingSystem.m,
               vertical: SpacingSystem.m,
             ),
-            border: const OutlineInputBorder(
+            enabledBorder: const OutlineInputBorder(
               borderRadius: RadiusSystem.radiusM,
               borderSide: BorderSide(color: ColorPalette.outline, width: 1.0),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: RadiusSystem.radiusM,
+              borderSide: BorderSide(color: ColorPalette.primaryAccent, width: 2.0),
             ),
           ),
         ),

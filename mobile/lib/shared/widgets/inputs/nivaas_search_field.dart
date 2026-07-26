@@ -4,57 +4,53 @@ import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Pill-shaped Search Field matching DESIGN_SYSTEM.md guidelines.
+/// Premium Full Pill Search Field Component (`RadiusSystem.radiusPill`).
 class NivaasSearchField extends StatelessWidget {
-  final String hintText;
   final TextEditingController? controller;
+  final String hintText;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onClear;
 
   const NivaasSearchField({
     super.key,
-    this.hintText = 'Search visitors, flats, notices...',
     this.controller,
+    this.hintText = 'Search residents, visitors, flats...',
     this.onChanged,
     this.onClear,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return TextField(
       controller: controller,
       onChanged: onChanged,
       style: TypographyScale.bodyLarge,
       decoration: InputDecoration(
         hintText: hintText,
-        prefixIcon: const Icon(Icons.search, color: ColorPalette.textSecondary),
-        suffixIcon: (controller?.text.isNotEmpty ?? false)
+        hintStyle: TypographyScale.bodyLarge.copyWith(color: ColorPalette.textMuted),
+        prefixIcon: const Icon(Icons.search_rounded, color: ColorPalette.textSecondary),
+        suffixIcon: controller?.text.isNotEmpty == true
             ? IconButton(
-                icon: const Icon(Icons.clear, size: 20.0),
+                icon: const Icon(Icons.clear_rounded, color: ColorPalette.textSecondary),
                 onPressed: () {
                   controller?.clear();
-                  if (onChanged != null) onChanged!('');
                   if (onClear != null) onClear!();
                 },
               )
             : null,
         filled: true,
-        fillColor: const Color(0xFFF1F3F4),
+        fillColor: ColorPalette.surfaceSubtle,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: SpacingSystem.m,
-          vertical: SpacingSystem.s,
-        ),
-        border: const OutlineInputBorder(
-          borderRadius: RadiusSystem.radiusPill,
-          borderSide: BorderSide.none,
+          vertical: SpacingSystem.m,
         ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: RadiusSystem.radiusPill,
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: ColorPalette.outline, width: 1.0),
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: RadiusSystem.radiusPill,
-          borderSide: BorderSide(color: ColorPalette.primary, width: 1.5),
+          borderSide: BorderSide(color: ColorPalette.primaryAccent, width: 1.5),
         ),
       ),
     );

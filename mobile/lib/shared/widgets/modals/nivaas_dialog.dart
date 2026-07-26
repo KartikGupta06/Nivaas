@@ -5,7 +5,7 @@ import '../../../app/config/theme/spacing_system.dart';
 import '../../../app/config/theme/typography_scale.dart';
 import '../buttons/nivaas_button.dart';
 
-/// Reusable Production-Ready Dialog Component matching DESIGN_SYSTEM.md.
+/// Premium Dialog Component matching Apple & Notion dialog aesthetics (24dp radius).
 class NivaasDialog extends StatelessWidget {
   final String title;
   final String message;
@@ -34,7 +34,7 @@ class NivaasDialog extends StatelessWidget {
     required String message,
     String confirmLabel = 'Confirm',
     String cancelLabel = 'Cancel',
-    IconData? icon = Icons.help_outline,
+    IconData? icon = Icons.help_outline_rounded,
   }) {
     return showDialog<bool>(
       context: context,
@@ -68,7 +68,14 @@ class NivaasDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 48.0, color: iconColor ?? ColorPalette.primary),
+              Container(
+                padding: const EdgeInsets.all(SpacingSystem.m),
+                decoration: BoxDecoration(
+                  color: (iconColor ?? ColorPalette.primary).withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 32.0, color: iconColor ?? ColorPalette.primary),
+              ),
               const SizedBox(height: SpacingSystem.m),
             ],
             Text(
@@ -76,10 +83,10 @@ class NivaasDialog extends StatelessWidget {
               style: TypographyScale.headingMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: SpacingSystem.s),
+            const SizedBox(height: SpacingSystem.xs),
             Text(
               message,
-              style: TypographyScale.bodyMedium,
+              style: TypographyScale.bodyMedium.copyWith(color: ColorPalette.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: SpacingSystem.l),

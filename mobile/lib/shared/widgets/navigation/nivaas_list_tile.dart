@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../app/config/theme/color_palette.dart';
+import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Production-Ready List Tile strictly enforcing 64dp minimum height & touch target guidelines.
+/// Premium List Tile Component matching Notion Mobile & Apple Settings.
 class NivaasListTile extends StatelessWidget {
   final String title;
   final String? subtitle;
@@ -29,24 +30,51 @@ class NivaasListTile extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 64.0),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: SpacingSystem.m,
-              vertical: SpacingSystem.xs,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: RadiusSystem.radiusM,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: SpacingSystem.m,
+                  vertical: SpacingSystem.s,
+                ),
+                child: Row(
+                  children: [
+                    if (leading != null) ...[
+                      leading!,
+                      const SizedBox(width: SpacingSystem.m),
+                    ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            title,
+                            style: TypographyScale.headingSmall,
+                          ),
+                          if (subtitle != null) ...[
+                            const SizedBox(height: 2.0),
+                            Text(
+                              subtitle!,
+                              style: TypographyScale.bodyMedium.copyWith(
+                                color: ColorPalette.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    if (trailing != null)
+                      trailing!
+                    else if (onTap != null)
+                      const Icon(Icons.chevron_right_rounded, color: ColorPalette.textMuted),
+                  ],
+                ),
+              ),
             ),
-            leading: leading,
-            title: Text(
-              title,
-              style: TypographyScale.headingSmall,
-            ),
-            subtitle: subtitle != null
-                ? Text(
-                    subtitle!,
-                    style: TypographyScale.bodyMedium,
-                  )
-                : null,
-            trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right, color: ColorPalette.textSecondary) : null),
-            onTap: onTap,
           ),
         ),
         if (showDivider)

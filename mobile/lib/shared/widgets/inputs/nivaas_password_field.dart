@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../../app/config/theme/color_palette.dart';
 import 'nivaas_text_field.dart';
 
-/// Reusable Password Field with visibility toggle icon.
+/// Reusable Password Field Component with visibility toggle icon.
 class NivaasPasswordField extends StatefulWidget {
-  final String label;
   final TextEditingController? controller;
-  final ValueChanged<String>? onChanged;
+  final String label;
   final String? errorText;
 
   const NivaasPasswordField({
     super.key,
-    this.label = 'Password',
     this.controller,
-    this.onChanged,
+    this.label = 'Password',
     this.errorText,
   });
 
@@ -26,15 +25,14 @@ class _NivaasPasswordFieldState extends State<NivaasPasswordField> {
   @override
   Widget build(BuildContext context) {
     return NivaasTextField(
-      label: widget.label,
       controller: widget.controller,
-      onChanged: widget.onChanged,
-      errorText: widget.errorText,
+      label: widget.label,
       obscureText: _obscureText,
-      maxLines: 1,
+      errorText: widget.errorText,
       suffixIcon: IconButton(
         icon: Icon(
-          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          color: ColorPalette.textSecondary,
         ),
         onPressed: () {
           setState(() {

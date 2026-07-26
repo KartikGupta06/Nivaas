@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/config/theme/color_palette.dart';
 import '../../../app/config/theme/typography_scale.dart';
 
-/// Reusable Circle Avatar with fallback initials & screen reader semantics.
+/// Premium Circle Avatar with fallback initials & slate fill.
 class NivaasAvatar extends StatelessWidget {
   final String name;
   final String? imageUrl;
@@ -12,7 +12,7 @@ class NivaasAvatar extends StatelessWidget {
     super.key,
     required this.name,
     this.imageUrl,
-    this.radius = 20.0,
+    this.radius = 22.0,
   });
 
   String get _initials {
@@ -44,7 +44,7 @@ class NivaasAvatar extends StatelessWidget {
           style: TypographyScale.caption.copyWith(
             color: ColorPalette.primary,
             fontWeight: FontWeight.w700,
-            fontSize: radius * 0.8,
+            fontSize: radius * 0.75,
           ),
         ),
       );

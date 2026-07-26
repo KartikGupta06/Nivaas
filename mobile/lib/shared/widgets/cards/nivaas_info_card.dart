@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../app/config/theme/color_palette.dart';
 import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
+import '../../../app/config/theme/typography_scale.dart';
 
 enum NivaasInfoCardVariant {
   info,
@@ -10,85 +11,81 @@ enum NivaasInfoCardVariant {
   error,
 }
 
-/// Reusable Tinted Status Info Card for messages and warnings.
+/// Premium Tinted Status Info Card Component matching Apple & Linear style.
 class NivaasInfoCard extends StatelessWidget {
   final String title;
   final String? subtitle;
-  final IconData? icon;
   final NivaasInfoCardVariant variant;
+  final IconData? icon;
 
   const NivaasInfoCard({
     super.key,
     required this.title,
     this.subtitle,
-    this.icon,
     this.variant = NivaasInfoCardVariant.info,
+    this.icon,
   });
 
   const NivaasInfoCard.info({
     super.key,
     required this.title,
     this.subtitle,
-    this.icon = Icons.info_outline,
-  }) : variant = NivaasInfoCardVariant.info;
+  })  : variant = NivaasInfoCardVariant.info,
+        icon = Icons.info_outline_rounded;
 
   const NivaasInfoCard.warning({
     super.key,
     required this.title,
     this.subtitle,
-    this.icon = Icons.warning_amber_outlined,
-  }) : variant = NivaasInfoCardVariant.warning;
+  })  : variant = NivaasInfoCardVariant.warning,
+        icon = Icons.warning_amber_rounded;
 
   const NivaasInfoCard.success({
     super.key,
     required this.title,
     this.subtitle,
-    this.icon = Icons.check_circle_outline,
-  }) : variant = NivaasInfoCardVariant.success;
+  })  : variant = NivaasInfoCardVariant.success,
+        icon = Icons.check_circle_outline_rounded;
 
   const NivaasInfoCard.error({
     super.key,
     required this.title,
     this.subtitle,
-    this.icon = Icons.error_outline,
-  }) : variant = NivaasInfoCardVariant.error;
+  })  : variant = NivaasInfoCardVariant.error,
+        icon = Icons.error_outline_rounded;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = _getCardColors();
+    final style = _getVariantStyle();
 
     return Container(
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: RadiusSystem.radiusM,
-        border: Border.all(color: colors.border, width: 1.0),
-      ),
       padding: const EdgeInsets.all(SpacingSystem.m),
+      decoration: BoxDecoration(
+        color: style.background,
+        borderRadius: RadiusSystem.radiusM,
+        border: Border.all(color: style.borderColor, width: 1.0),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 24.0, color: colors.iconColor),
-            const SizedBox(width: SpacingSystem.m),
-          ],
+          Icon(icon ?? style.icon, color: style.iconColor, size: 22.0),
+          const SizedBox(width: SpacingSystem.m),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: ColorPalette.textPrimary,
-                    fontWeight: FontWeight.w600,
+                  style: TypographyScale.headingSmall.copyWith(
+                    color: style.textColor,
                   ),
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 4.0),
+                  const SizedBox(height: SpacingSystem.xs),
                   Text(
                     subtitle!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: ColorPalette.textSecondary,
+                    style: TypographyScale.bodyMedium.copyWith(
+                      color: style.textColor.withValues(alpha: 0.85),
                     ),
                   ),
                 ],
@@ -100,31 +97,45 @@ class NivaasInfoCard extends StatelessWidget {
     );
   }
 
-  ({Color background, Color border, Color iconColor}) _getCardColors() {
+  ({
+    Color background,
+    Color borderColor,
+    Color textColor,
+    Color iconColor,
+    IconData icon,
+  }) _getVariantStyle() {
     switch (variant) {
       case NivaasInfoCardVariant.info:
         return (
-          background: ColorPalette.primaryContainer,
-          border: ColorPalette.primary.withValues(alpha: 0.3),
-          iconColor: ColorPalette.primary,
+          background: ColorPalette.infoContainer,
+          borderColor: ColorPalette.info.withValues(alpha: 0.2),
+          textColor: ColorPalette.info,
+          iconColor: ColorPalette.info,
+          icon: Icons.info_outline_rounded,
         );
       case NivaasInfoCardVariant.warning:
         return (
           background: ColorPalette.warningContainer,
-          border: ColorPalette.warning.withValues(alpha: 0.3),
+          borderColor: ColorPalette.warning.withValues(alpha: 0.2),
+          textColor: ColorPalette.warning,
           iconColor: ColorPalette.warning,
+          icon: Icons.warning_amber_rounded,
         );
       case NivaasInfoCardVariant.success:
         return (
           background: ColorPalette.successContainer,
-          border: ColorPalette.success.withValues(alpha: 0.3),
+          borderColor: ColorPalette.success.withValues(alpha: 0.2),
+          textColor: ColorPalette.success,
           iconColor: ColorPalette.success,
+          icon: Icons.check_circle_outline_rounded,
         );
       case NivaasInfoCardVariant.error:
         return (
           background: ColorPalette.errorContainer,
-          border: ColorPalette.error.withValues(alpha: 0.3),
+          borderColor: ColorPalette.error.withValues(alpha: 0.2),
+          textColor: ColorPalette.error,
           iconColor: ColorPalette.error,
+          icon: Icons.error_outline_rounded,
         );
     }
   }

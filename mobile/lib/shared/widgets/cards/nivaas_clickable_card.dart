@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../app/config/theme/color_palette.dart';
+import '../../../app/config/theme/elevation_system.dart';
 import '../../../app/config/theme/radius_system.dart';
 import '../../../app/config/theme/spacing_system.dart';
 
-/// Reusable Clickable Card Widget with InkWell ripple feedback & Semantics.
+/// Premium Clickable Card Component with InkWell ripple feedback & micro-shadows.
 class NivaasClickableCard extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
@@ -24,23 +25,26 @@ class NivaasClickableCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticLabel,
-      child: Card(
-        color: ColorPalette.surface,
-        elevation: 1.0,
-        margin: EdgeInsets.zero,
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: ColorPalette.outline, width: 1.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: ColorPalette.surface,
           borderRadius: RadiusSystem.radiusM,
+          border: Border.all(color: ColorPalette.outline, width: 1.0),
+          boxShadow: ElevationSystem.cardShadow,
         ),
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            onTap();
-          },
+        child: Material(
+          color: Colors.transparent,
           borderRadius: RadiusSystem.radiusM,
-          child: Padding(
-            padding: padding,
-            child: child,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onTap();
+            },
+            borderRadius: RadiusSystem.radiusM,
+            child: Padding(
+              padding: padding,
+              child: child,
+            ),
           ),
         ),
       ),
