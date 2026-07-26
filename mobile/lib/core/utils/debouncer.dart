@@ -16,4 +16,8 @@ class Debouncer {
   void cancel() {
     _timer?.cancel();
   }
+
+  void dispose() {
+    cancel();
+  }
 }

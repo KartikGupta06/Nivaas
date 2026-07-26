@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 class Throttler {
   final Duration duration;
   bool _isThrottled = false;
+  Timer? _timer;
 
   Throttler({this.duration = const Duration(milliseconds: 500)});
 
@@ -12,8 +13,13 @@ class Throttler {
     if (_isThrottled) return;
     _isThrottled = true;
     action();
-    Timer(duration, () {
+    _timer = Timer(duration, () {
       _isThrottled = false;
     });
+  }
+
+  void dispose() {
+    _timer?.cancel();
+    _isThrottled = false;
   }
 }

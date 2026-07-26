@@ -5,15 +5,16 @@ import '../constants/storage_keys.dart';
 class SecureStorageService {
   final FlutterSecureStorage _storage;
 
-  SecureStorageService()
-      : _storage = const FlutterSecureStorage(
-          aOptions: AndroidOptions(
-            encryptedSharedPreferences: true,
-          ),
-          iOptions: IOSOptions(
-            accessibility: KeychainAccessibility.first_unlock,
-          ),
-        );
+  SecureStorageService({FlutterSecureStorage? storage})
+      : _storage = storage ??
+            const FlutterSecureStorage(
+              aOptions: AndroidOptions(
+                encryptedSharedPreferences: true,
+              ),
+              iOptions: IOSOptions(
+                accessibility: KeychainAccessibility.first_unlock,
+              ),
+            );
 
   Future<void> write(String key, String value) async {
     await _storage.write(key: key, value: value);
