@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/design_showcase/presentation/design_showcase_screen.dart';
+import '../../features/society_setup/presentation/screens/society_setup_wizard_screen.dart';
+import '../../shared/widgets/buttons/nivaas_button.dart';
 import '../../shared/widgets/placeholder_view.dart';
+
 import '../config/routes/route_names.dart';
 import '../observers/app_route_observer.dart';
 import 'auth_state_provider.dart';
@@ -22,8 +26,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAuthRoute = state.matchedLocation == RouteNames.auth;
       final isSplashRoute = state.matchedLocation == RouteNames.splash;
       final isShowcaseRoute = state.matchedLocation == RouteNames.designShowcase;
+      final isSetupRoute = state.matchedLocation == RouteNames.societySetup;
 
-      if (!authState.isAuthenticated && !isAuthRoute && !isSplashRoute && !isShowcaseRoute) {
+      if (!authState.isAuthenticated && !isAuthRoute && !isSplashRoute && !isShowcaseRoute && !isSetupRoute) {
         return RouteNames.auth;
       }
       return null;
@@ -46,9 +51,34 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RouteNames.adminHome,
-        builder: (context, state) => const PlaceholderView(
-          title: 'Society Admin Workspace',
-          description: 'RWA Administration & Society Management Shell',
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(title: const Text('Society Admin Workspace')),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.domain_add_rounded, size: 64, color: Color(0xFF2563EB)),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Society Onboarding Ready',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Digitally set up your housing society, wings, floor layout engine, and initial owner assignments.',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  NivaasButton.primary(
+                    label: 'Start Society Setup Wizard',
+                    onPressed: () => context.go(RouteNames.societySetup),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
       GoRoute(
@@ -57,6 +87,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           title: 'Gate Security Stream',
           description: 'High-Contrast Gate Entry Check-in Shell',
         ),
+      ),
+      GoRoute(
+        path: RouteNames.societySetup,
+        builder: (context, state) => const SocietySetupWizardScreen(),
       ),
       GoRoute(
         path: RouteNames.designShowcase,

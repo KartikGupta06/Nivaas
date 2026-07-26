@@ -5,6 +5,6 @@ abstract class RouteNames {
   static const String residentHome = '/resident/home';
   static const String adminHome = '/admin/home';
   static const String watchmanHome = '/watchman/home';
-  static const String settings = '/settings';
+  static const String societySetup = '/society-setup';
   static const String designShowcase = '/design-showcase';
 }
