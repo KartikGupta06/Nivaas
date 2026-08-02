@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 enum HouseType {
+  rk1,
   bhk1,
   bhk2,
   bhk3,
   bhk4,
-  rk1,
   penthouse,
   duplex,
   custom,
@@ -42,8 +42,13 @@ class HouseUnit extends Equatable {
   final String flatNumber; // e.g. "101", "A-204"
   final HouseType type;
   final double? areaSqFt;
+  final String maintenanceCategory; // e.g. "STANDARD", "PREMIUM"
+  final String? parkingSlot; // e.g. "P-12"
   final String? ownerName;
   final String? ownerPhone;
+  final String? ownerEmail;
+  final String? emergencyContact;
+  final bool isCustomized; // Inherited vs Floor Exception
 
   const HouseUnit({
     required this.id,
@@ -52,8 +57,13 @@ class HouseUnit extends Equatable {
     required this.flatNumber,
     this.type = HouseType.bhk2,
     this.areaSqFt,
+    this.maintenanceCategory = 'STANDARD',
+    this.parkingSlot,
     this.ownerName,
     this.ownerPhone,
+    this.ownerEmail,
+    this.emergencyContact,
+    this.isCustomized = false,
   });
 
   HouseUnit copyWith({
@@ -63,8 +73,13 @@ class HouseUnit extends Equatable {
     String? flatNumber,
     HouseType? type,
     double? areaSqFt,
+    String? maintenanceCategory,
+    String? parkingSlot,
     String? ownerName,
     String? ownerPhone,
+    String? ownerEmail,
+    String? emergencyContact,
+    bool? isCustomized,
   }) {
     return HouseUnit(
       id: id ?? this.id,
@@ -73,8 +88,13 @@ class HouseUnit extends Equatable {
       flatNumber: flatNumber ?? this.flatNumber,
       type: type ?? this.type,
       areaSqFt: areaSqFt ?? this.areaSqFt,
+      maintenanceCategory: maintenanceCategory ?? this.maintenanceCategory,
+      parkingSlot: parkingSlot ?? this.parkingSlot,
       ownerName: ownerName ?? this.ownerName,
       ownerPhone: ownerPhone ?? this.ownerPhone,
+      ownerEmail: ownerEmail ?? this.ownerEmail,
+      emergencyContact: emergencyContact ?? this.emergencyContact,
+      isCustomized: isCustomized ?? this.isCustomized,
     );
   }
 
@@ -86,8 +106,13 @@ class HouseUnit extends Equatable {
       'flat_number': flatNumber,
       'type': type.name,
       'area_sq_ft': areaSqFt,
+      'maintenance_category': maintenanceCategory,
+      'parking_slot': parkingSlot,
       'owner_name': ownerName,
       'owner_phone': ownerPhone,
+      'owner_email': ownerEmail,
+      'emergency_contact': emergencyContact,
+      'is_customized': isCustomized,
     };
   }
 
@@ -102,8 +127,13 @@ class HouseUnit extends Equatable {
         orElse: () => HouseType.bhk2,
       ),
       areaSqFt: (json['area_sq_ft'] as num?)?.toDouble(),
+      maintenanceCategory: json['maintenance_category'] as String? ?? 'STANDARD',
+      parkingSlot: json['parking_slot'] as String?,
       ownerName: json['owner_name'] as String?,
       ownerPhone: json['owner_phone'] as String?,
+      ownerEmail: json['owner_email'] as String?,
+      emergencyContact: json['emergency_contact'] as String?,
+      isCustomized: json['is_customized'] as bool? ?? false,
     );
   }
 
@@ -115,7 +145,12 @@ class HouseUnit extends Equatable {
         flatNumber,
         type,
         areaSqFt,
+        maintenanceCategory,
+        parkingSlot,
         ownerName,
         ownerPhone,
+        ownerEmail,
+        emergencyContact,
+        isCustomized,
       ];
 }

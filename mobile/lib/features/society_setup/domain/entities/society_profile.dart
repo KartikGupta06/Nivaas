@@ -35,6 +35,7 @@ class SocietyProfile extends Equatable {
   final String contactNumber;
   final String? email;
   final String? registrationNumber;
+  final String? logoUrl;
 
   const SocietyProfile({
     required this.id,
@@ -48,6 +49,7 @@ class SocietyProfile extends Equatable {
     required this.contactNumber,
     this.email,
     this.registrationNumber,
+    this.logoUrl,
   });
 
   factory SocietyProfile.initial() {
@@ -63,6 +65,27 @@ class SocietyProfile extends Equatable {
     );
   }
 
+  bool get isValid =>
+      name.trim().isNotEmpty &&
+      address.trim().isNotEmpty &&
+      city.trim().isNotEmpty &&
+      state.trim().isNotEmpty &&
+      pinCode.trim().length == 6 &&
+      contactNumber.trim().length == 10;
+
+  String? get nameValidationError {
+    if (name.trim().isEmpty) return 'Society name is required';
+    if (name.trim().length < 3) return 'Name must be at least 3 characters';
+    return null;
+  }
+
+  String? get phoneValidationError {
+    if (contactNumber.trim().isEmpty) return 'Contact number is required';
+    final regExp = RegExp(r'^[6-9]\d{9}$');
+    if (!regExp.hasMatch(contactNumber.trim())) return 'Enter valid 10-digit Indian phone number';
+    return null;
+  }
+
   SocietyProfile copyWith({
     String? id,
     String? name,
@@ -75,6 +98,7 @@ class SocietyProfile extends Equatable {
     String? contactNumber,
     String? email,
     String? registrationNumber,
+    String? logoUrl,
   }) {
     return SocietyProfile(
       id: id ?? this.id,
@@ -88,6 +112,7 @@ class SocietyProfile extends Equatable {
       contactNumber: contactNumber ?? this.contactNumber,
       email: email ?? this.email,
       registrationNumber: registrationNumber ?? this.registrationNumber,
+      logoUrl: logoUrl ?? this.logoUrl,
     );
   }
 
@@ -104,6 +129,7 @@ class SocietyProfile extends Equatable {
       'contact_number': contactNumber,
       'email': email,
       'registration_number': registrationNumber,
+      'logo_url': logoUrl,
     };
   }
 
@@ -123,6 +149,7 @@ class SocietyProfile extends Equatable {
       contactNumber: json['contact_number'] as String? ?? '',
       email: json['email'] as String?,
       registrationNumber: json['registration_number'] as String?,
+      logoUrl: json['logo_url'] as String?,
     );
   }
 
@@ -139,5 +166,6 @@ class SocietyProfile extends Equatable {
         contactNumber,
         email,
         registrationNumber,
+        logoUrl,
       ];
 }

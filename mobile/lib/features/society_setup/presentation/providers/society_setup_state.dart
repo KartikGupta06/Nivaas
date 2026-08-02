@@ -1,18 +1,19 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/house_unit.dart';
+import '../../domain/entities/maintenance_config.dart';
 import '../../domain/entities/society_profile.dart';
 import '../../domain/entities/wing_config.dart';
 
-/// State representation for Multi-Step Society Setup Wizard.
+/// Master State representation for Multi-Step Society Setup Wizard.
 class SocietySetupState extends Equatable {
-  final int currentStep; // 0 to 5
+  final int currentStep; // 0 to 7
   final bool isLoading;
   final bool isSubmitting;
+  final bool isDraftSaved;
   final SocietyProfile profile;
   final List<WingConfig> wings;
   final List<HouseUnit> generatedHouses;
-  final double defaultMaintenanceAmount;
-  final int maintenanceDueDate;
+  final MaintenanceConfig maintenanceConfig;
   final String? errorMessage;
   final bool isCompleted;
 
@@ -20,14 +21,14 @@ class SocietySetupState extends Equatable {
     this.currentStep = 0,
     this.isLoading = false,
     this.isSubmitting = false,
+    this.isDraftSaved = false,
     required this.profile,
     this.wings = const [
-      WingConfig(id: 'wing_a', name: 'Wing A', totalFloors: 4, flatsPerFloor: 4),
-      WingConfig(id: 'wing_b', name: 'Wing B', totalFloors: 4, flatsPerFloor: 4),
+      WingConfig(id: 'wing_a', name: 'Wing A', totalFloors: 4, flatsPerFloor: 4, displayOrder: 0),
+      WingConfig(id: 'wing_b', name: 'Wing B', totalFloors: 4, flatsPerFloor: 4, displayOrder: 1),
     ],
     this.generatedHouses = const [],
-    this.defaultMaintenanceAmount = 2500.0,
-    this.maintenanceDueDate = 5,
+    this.maintenanceConfig = const MaintenanceConfig(),
     this.errorMessage,
     this.isCompleted = false,
   });
@@ -42,11 +43,11 @@ class SocietySetupState extends Equatable {
     int? currentStep,
     bool? isLoading,
     bool? isSubmitting,
+    bool? isDraftSaved,
     SocietyProfile? profile,
     List<WingConfig>? wings,
     List<HouseUnit>? generatedHouses,
-    double? defaultMaintenanceAmount,
-    int? maintenanceDueDate,
+    MaintenanceConfig? maintenanceConfig,
     String? errorMessage,
     bool? isCompleted,
   }) {
@@ -54,11 +55,11 @@ class SocietySetupState extends Equatable {
       currentStep: currentStep ?? this.currentStep,
       isLoading: isLoading ?? this.isLoading,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      isDraftSaved: isDraftSaved ?? this.isDraftSaved,
       profile: profile ?? this.profile,
       wings: wings ?? this.wings,
       generatedHouses: generatedHouses ?? this.generatedHouses,
-      defaultMaintenanceAmount: defaultMaintenanceAmount ?? this.defaultMaintenanceAmount,
-      maintenanceDueDate: maintenanceDueDate ?? this.maintenanceDueDate,
+      maintenanceConfig: maintenanceConfig ?? this.maintenanceConfig,
       errorMessage: errorMessage,
       isCompleted: isCompleted ?? this.isCompleted,
     );
@@ -69,11 +70,11 @@ class SocietySetupState extends Equatable {
         currentStep,
         isLoading,
         isSubmitting,
+        isDraftSaved,
         profile,
         wings,
         generatedHouses,
-        defaultMaintenanceAmount,
-        maintenanceDueDate,
+        maintenanceConfig,
         errorMessage,
         isCompleted,
       ];

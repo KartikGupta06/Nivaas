@@ -1,4 +1,5 @@
 import '../../../../core/network/api_client.dart';
+import '../../domain/entities/house_owner.dart';
 import '../../domain/entities/house_unit.dart';
 import '../../domain/entities/society_profile.dart';
 import '../../domain/entities/wing_config.dart';
@@ -7,6 +8,7 @@ abstract class SocietySetupRemoteDataSource {
   Future<void> createSociety(SocietyProfile profile);
   Future<void> createWings(String societyId, List<WingConfig> wings);
   Future<void> createHouses(String societyId, List<HouseUnit> houses);
+  Future<void> assignOwners(String societyId, List<HouseOwner> owners);
   Future<void> submitFullOnboarding({
     required SocietyProfile profile,
     required List<WingConfig> wings,
@@ -46,6 +48,14 @@ class SocietySetupRemoteDataSourceImpl implements SocietySetupRemoteDataSource {
   }
 
   @override
+  Future<void> assignOwners(String societyId, List<HouseOwner> owners) async {
+    await _apiClient.post<Map<String, dynamic>>(
+      '/societies/$societyId/owners',
+      data: {'owners': owners.map((o) => o.toJson()).toList()},
+    );
+  }
+
+  @override
   Future<void> submitFullOnboarding({
     required SocietyProfile profile,
     required List<WingConfig> wings,
@@ -54,13 +64,15 @@ class SocietySetupRemoteDataSourceImpl implements SocietySetupRemoteDataSource {
     required int dueDate,
   }) async {
     await _apiClient.post<Map<String, dynamic>>(
-      '/societies/onboarding/complete',
+      '/societies/setup',
       data: {
         'profile': profile.toJson(),
         'wings': wings.map((w) => w.toJson()).toList(),
         'houses': houses.map((h) => h.toJson()).toList(),
-        'maintenance_amount': maintenanceAmount,
-        'maintenance_due_date': dueDate,
+        'maintenance': {
+          'default_amount': maintenanceAmount,
+          'due_date_day': dueDate,
+        },
       },
     );
   }

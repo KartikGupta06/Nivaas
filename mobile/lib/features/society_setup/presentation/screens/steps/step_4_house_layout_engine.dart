@@ -6,12 +6,14 @@ import 'package:nivaas_mobile/app/config/theme/spacing_system.dart';
 import 'package:nivaas_mobile/app/config/theme/typography_scale.dart';
 import 'package:nivaas_mobile/features/society_setup/domain/entities/house_unit.dart';
 import 'package:nivaas_mobile/features/society_setup/presentation/providers/society_setup_controller.dart';
+import 'package:nivaas_mobile/shared/widgets/buttons/nivaas_button.dart';
 import 'package:nivaas_mobile/shared/widgets/cards/nivaas_card.dart';
+import 'package:nivaas_mobile/shared/widgets/inputs/nivaas_text_field.dart';
 import 'package:nivaas_mobile/shared/widgets/layout/nivaas_gap.dart';
 import 'package:nivaas_mobile/shared/widgets/selection/nivaas_status_chip.dart';
 
-class Step3HouseLayoutEngine extends ConsumerWidget {
-  const Step3HouseLayoutEngine({super.key});
+class Step4HouseLayoutEngine extends ConsumerWidget {
+  const Step4HouseLayoutEngine({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +44,7 @@ class Step3HouseLayoutEngine extends ConsumerWidget {
                 ),
               ],
             ),
-            const NivaasStatusChip.approved(label: 'ENGINE READY'),
+            const NivaasStatusChip.approved(label: 'ENGINE ACTIVE'),
           ],
         ),
         const NivaasGap.l(),
@@ -80,12 +82,15 @@ class Step3HouseLayoutEngine extends ConsumerWidget {
                         onTap: () => _showHouseEditSheet(context, ref, house),
                         borderRadius: RadiusSystem.radiusM,
                         child: Container(
-                          width: 100.0,
+                          width: 105.0,
                           padding: const EdgeInsets.all(SpacingSystem.s),
                           decoration: BoxDecoration(
-                            color: ColorPalette.surfaceSubtle,
+                            color: house.isCustomized ? ColorPalette.primaryContainer : ColorPalette.surfaceSubtle,
                             borderRadius: RadiusSystem.radiusM,
-                            border: Border.all(color: ColorPalette.outline, width: 1.0),
+                            border: Border.all(
+                              color: house.isCustomized ? ColorPalette.primary : ColorPalette.outline,
+                              width: 1.0,
+                            ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -105,6 +110,14 @@ class Step3HouseLayoutEngine extends ConsumerWidget {
                                   fontSize: 10.0,
                                 ),
                               ),
+                              if (house.areaSqFt != null)
+                                Text(
+                                  '${house.areaSqFt!.toStringAsFixed(0)} sqft',
+                                  style: TypographyScale.caption.copyWith(
+                                    color: ColorPalette.textMuted,
+                                    fontSize: 9.0,
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -122,18 +135,26 @@ class Step3HouseLayoutEngine extends ConsumerWidget {
 
   void _showHouseEditSheet(BuildContext context, WidgetRef ref, HouseUnit house) {
     final controller = ref.read(societySetupControllerProvider.notifier);
+    final areaController = TextEditingController(text: house.areaSqFt?.toStringAsFixed(0) ?? '');
+    final parkingController = TextEditingController(text: house.parkingSlot ?? '');
 
     showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: RadiusSystem.bottomSheetTop),
-      builder: (context) {
+      builder: (modalContext) {
         return Padding(
-          padding: const EdgeInsets.all(SpacingSystem.m),
+          padding: EdgeInsets.only(
+            left: SpacingSystem.m,
+            right: SpacingSystem.m,
+            top: SpacingSystem.m,
+            bottom: MediaQuery.of(modalContext).viewInsets.bottom + SpacingSystem.m,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Configure Flat ${house.flatNumber}', style: TypographyScale.headingMedium),
+              Text('Configure Flat ${house.flatNumber} (${house.wingName})', style: TypographyScale.headingMedium),
               const SizedBox(height: SpacingSystem.m),
               const Text('House Configuration Type', style: TypographyScale.caption),
               const SizedBox(height: SpacingSystem.xs),
@@ -147,10 +168,45 @@ class Step3HouseLayoutEngine extends ConsumerWidget {
                     selectedColor: ColorPalette.primaryContainer,
                     onSelected: (_) {
                       controller.updateHouseType(house.id, type);
-                      Navigator.pop(context);
+                      Navigator.pop(modalContext);
                     },
                   );
                 }).toList(),
+              ),
+              const NivaasGap.m(),
+              Row(
+                children: [
+                  Expanded(
+                    child: NivaasTextField(
+                      label: 'Area (sq ft)',
+                      hintText: 'e.g. 1450',
+                      keyboardType: TextInputType.number,
+                      controller: areaController,
+                    ),
+                  ),
+                  const SizedBox(width: SpacingSystem.m),
+                  Expanded(
+                    child: NivaasTextField(
+                      label: 'Parking Slot (Future)',
+                      hintText: 'e.g. P-12',
+                      controller: parkingController,
+                    ),
+                  ),
+                ],
+              ),
+              const NivaasGap.l(),
+              NivaasButton.primary(
+                label: 'Save Configuration',
+                onPressed: () {
+                  final sqFt = double.tryParse(areaController.text.trim());
+                  final parking = parkingController.text.trim();
+                  controller.updateHouseDetails(
+                    house.id,
+                    areaSqFt: sqFt,
+                    parkingSlot: parking.isNotEmpty ? parking : null,
+                  );
+                  Navigator.pop(modalContext);
+                },
               ),
             ],
           ),

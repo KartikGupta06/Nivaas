@@ -13,10 +13,12 @@ import '../../../../shared/widgets/navigation/nivaas_app_bar.dart';
 import '../providers/society_setup_controller.dart';
 import 'steps/step_1_society_profile.dart';
 import 'steps/step_2_wing_config.dart';
-import 'steps/step_3_house_layout_engine.dart';
-import 'steps/step_4_maintenance_config.dart';
-import 'steps/step_5_owner_assignment.dart';
-import 'steps/step_6_review_complete.dart';
+import 'steps/step_3_floor_config.dart';
+import 'steps/step_4_house_layout_engine.dart';
+import 'steps/step_5_maintenance_config.dart';
+import 'steps/step_6_owner_assignment.dart';
+import 'steps/step_7_invitation_flow.dart';
+import 'steps/step_8_review_complete.dart';
 
 /// Multi-Step Onboarding Wizard Screen for Society Setup.
 class SocietySetupWizardScreen extends ConsumerWidget {
@@ -31,18 +33,22 @@ class SocietySetupWizardScreen extends ConsumerWidget {
     final steps = [
       const Step1SocietyProfile(),
       const Step2WingConfig(),
-      const Step3HouseLayoutEngine(),
-      const Step4MaintenanceConfig(),
-      const Step5OwnerAssignment(),
-      const Step6ReviewComplete(),
+      const Step3FloorConfig(),
+      const Step4HouseLayoutEngine(),
+      const Step5MaintenanceConfig(),
+      const Step6OwnerAssignment(),
+      const Step7InvitationFlow(),
+      const Step8ReviewComplete(),
     ];
 
     final stepTitles = [
       'Profile',
       'Wings',
+      'Floors',
       'Flats Engine',
-      'Maintenance',
+      'Rules',
       'Owners',
+      'Invite',
       'Review',
     ];
 
@@ -50,6 +56,17 @@ class SocietySetupWizardScreen extends ConsumerWidget {
       appBar: NivaasAppBar(
         title: 'Society Setup • Step ${setupState.currentStep + 1} of ${steps.length}',
         actions: [
+          TextButton(
+            onPressed: () async {
+              await controller.saveDraft();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Draft progress saved!')),
+                );
+              }
+            },
+            child: const Text('Save Draft', style: TextStyle(color: ColorPalette.primary)),
+          ),
           IconButton(
             icon: const Icon(Icons.close_rounded),
             onPressed: () => context.go(RouteNames.adminHome),
@@ -70,55 +87,82 @@ class SocietySetupWizardScreen extends ConsumerWidget {
             // Step Indicator Header
             Container(
               color: ColorPalette.surface,
-              padding: const EdgeInsets.symmetric(horizontal: SpacingSystem.m, vertical: SpacingSystem.s),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(steps.length, (index) {
-                  final isSelected = setupState.currentStep == index;
-                  final isDone = setupState.currentStep > index;
+              padding: const EdgeInsets.symmetric(horizontal: SpacingSystem.s, vertical: SpacingSystem.s),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(steps.length, (index) {
+                    final isSelected = setupState.currentStep == index;
+                    final isDone = setupState.currentStep > index;
 
-                  return InkWell(
-                    onTap: () => controller.setStep(index),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircleAvatar(
-                          radius: 12.0,
-                          backgroundColor: isDone
-                              ? ColorPalette.success
-                              : (isSelected ? ColorPalette.primaryAccent : ColorPalette.outline),
-                          child: isDone
-                              ? const Icon(Icons.check, size: 14, color: Colors.white)
-                              : Text(
-                                  '${index + 1}',
-                                  style: TypographyScale.caption.copyWith(
-                                    color: isSelected ? Colors.white : ColorPalette.textSecondary,
-                                    fontSize: 10.0,
-                                  ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: InkWell(
+                        onTap: () => controller.setStep(index),
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isSelected ? ColorPalette.primaryContainer : Colors.transparent,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 10.0,
+                                backgroundColor: isDone
+                                    ? ColorPalette.success
+                                    : (isSelected ? ColorPalette.primaryAccent : ColorPalette.outline),
+                                child: isDone
+                                    ? const Icon(Icons.check, size: 12, color: Colors.white)
+                                    : Text(
+                                        '${index + 1}',
+                                        style: TypographyScale.caption.copyWith(
+                                          color: isSelected ? Colors.white : ColorPalette.textSecondary,
+                                          fontSize: 9.0,
+                                        ),
+                                      ),
+                              ),
+                              const SizedBox(width: 4.0),
+                              Text(
+                                stepTitles[index],
+                                style: TypographyScale.caption.copyWith(
+                                  fontSize: 11.0,
+                                  color: isSelected ? ColorPalette.primary : ColorPalette.textMuted,
+                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
                                 ),
-                        ),
-                        const SizedBox(height: 2.0),
-                        Text(
-                          stepTitles[index],
-                          style: TypographyScale.caption.copyWith(
-                            fontSize: 10.0,
-                            color: isSelected ? ColorPalette.primary : ColorPalette.textMuted,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                }),
+                      ),
+                    );
+                  }),
+                ),
               ),
             ),
             const Divider(height: 1.0, color: ColorPalette.outline),
 
-            // Wizard Step Page Content
+            // Wizard Step Page Content with Animated Transitions
             Expanded(
-              child: IndexedStack(
-                index: setupState.currentStep,
-                children: steps,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.05, 0.0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: KeyedSubtree(
+                  key: ValueKey<int>(setupState.currentStep),
+                  child: steps[setupState.currentStep],
+                ),
               ),
             ),
 

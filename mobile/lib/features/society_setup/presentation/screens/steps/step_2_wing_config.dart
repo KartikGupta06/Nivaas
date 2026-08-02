@@ -43,12 +43,12 @@ class _Step2WingConfigState extends ConsumerState<Step2WingConfig> {
       padding: const EdgeInsets.all(SpacingSystem.m),
       children: [
         const Text(
-          'Wing & Floor Configuration',
+          'Wing / Block Configuration',
           style: TypographyScale.headingLarge,
         ),
         const SizedBox(height: SpacingSystem.xs),
         const Text(
-          'Add wings (blocks) and specify total floors and flats per floor for layout generation.',
+          'Add wings or towers (e.g. Wing A, Wing B). You can rename, delete, or reorder wings.',
           style: TypographyScale.bodyMedium,
         ),
         const NivaasGap.l(),
@@ -71,112 +71,174 @@ class _Step2WingConfigState extends ConsumerState<Step2WingConfig> {
             ),
           ],
         ),
+        if (setupState.errorMessage != null) ...[
+          const NivaasGap.s(),
+          Text(
+            setupState.errorMessage!,
+            style: TypographyScale.caption.copyWith(color: ColorPalette.error),
+          ),
+        ],
         const NivaasGap.l(),
         const Text(
           'Configured Wings',
           style: TypographyScale.headingMedium,
         ),
         const NivaasGap.s(),
-        ...setupState.wings.map((wing) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: SpacingSystem.m),
-            child: NivaasCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(SpacingSystem.s),
-                            decoration: const BoxDecoration(
-                              color: ColorPalette.primaryContainer,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(Icons.apartment_rounded, color: ColorPalette.primary),
-                          ),
-                          const SizedBox(width: SpacingSystem.m),
-                          Text(
-                            wing.name,
-                            style: TypographyScale.headingMedium,
-                          ),
-                        ],
-                      ),
-                      if (setupState.wings.length > 1)
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline_rounded, color: ColorPalette.error),
-                          onPressed: () => controller.removeWing(wing.id),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: SpacingSystem.m),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+        ReorderableListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: setupState.wings.length,
+          // ignore: deprecated_member_use
+          onReorder: (oldIndex, newIndex) {
+            controller.reorderWings(oldIndex, newIndex);
+          },
+          itemBuilder: (context, index) {
+            final wing = setupState.wings[index];
+
+            return Padding(
+              key: ValueKey(wing.id),
+              padding: const EdgeInsets.only(bottom: SpacingSystem.m),
+              child: NivaasCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            const Text('Total Floors', style: TypographyScale.caption),
-                            const SizedBox(height: 4.0),
-                            DropdownButtonFormField<int>(
-                              initialValue: wing.totalFloors,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                border: OutlineInputBorder(
-                                  borderRadius: RadiusSystem.radiusM,
-                                  borderSide: BorderSide(color: ColorPalette.outline),
-                                ),
+                            const Icon(Icons.drag_indicator_rounded, color: ColorPalette.textMuted),
+                            const SizedBox(width: SpacingSystem.s),
+                            Container(
+                              padding: const EdgeInsets.all(SpacingSystem.s),
+                              decoration: const BoxDecoration(
+                                color: ColorPalette.primaryContainer,
+                                shape: BoxShape.circle,
                               ),
-                              items: List.generate(20, (i) => i + 1)
-                                  .map((f) => DropdownMenuItem(value: f, child: Text('$f Floors')))
-                                  .toList(),
-                              onChanged: (val) {
-                                if (val != null) {
-                                  controller.updateWingConfig(wing.id, val, wing.flatsPerFloor);
-                                }
-                              },
+                              child: const Icon(Icons.apartment_rounded, color: ColorPalette.primary),
+                            ),
+                            const SizedBox(width: SpacingSystem.m),
+                            Text(
+                              wing.name,
+                              style: TypographyScale.headingMedium,
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(width: SpacingSystem.m),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            const Text('Flats / Floor', style: TypographyScale.caption),
-                            const SizedBox(height: 4.0),
-                            DropdownButtonFormField<int>(
-                              initialValue: wing.flatsPerFloor,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                border: OutlineInputBorder(
-                                  borderRadius: RadiusSystem.radiusM,
-                                  borderSide: BorderSide(color: ColorPalette.outline),
-                                ),
-                              ),
-                              items: List.generate(10, (i) => i + 1)
-                                  .map((f) => DropdownMenuItem(value: f, child: Text('$f Flats')))
-                                  .toList(),
-                              onChanged: (val) {
-                                if (val != null) {
-                                  controller.updateWingConfig(wing.id, wing.totalFloors, val);
-                                }
-                              },
+                            IconButton(
+                              icon: const Icon(Icons.edit_rounded, color: ColorPalette.primary),
+                              onPressed: () => _showRenameDialog(context, ref, wing.id, wing.name),
                             ),
+                            if (setupState.wings.length > 1)
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline_rounded, color: ColorPalette.error),
+                                onPressed: () => controller.removeWing(wing.id),
+                              ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: SpacingSystem.m),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Total Floors', style: TypographyScale.caption),
+                              const SizedBox(height: 4.0),
+                              DropdownButtonFormField<int>(
+                                initialValue: wing.totalFloors,
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  border: OutlineInputBorder(
+                                    borderRadius: RadiusSystem.radiusM,
+                                    borderSide: BorderSide(color: ColorPalette.outline),
+                                  ),
+                                ),
+                                items: List.generate(20, (i) => i + 1)
+                                    .map((f) => DropdownMenuItem(value: f, child: Text('$f Floors')))
+                                    .toList(),
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    controller.updateWingConfig(wing.id, val, wing.flatsPerFloor);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: SpacingSystem.m),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Flats / Floor', style: TypographyScale.caption),
+                              const SizedBox(height: 4.0),
+                              DropdownButtonFormField<int>(
+                                initialValue: wing.flatsPerFloor,
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  border: OutlineInputBorder(
+                                    borderRadius: RadiusSystem.radiusM,
+                                    borderSide: BorderSide(color: ColorPalette.outline),
+                                  ),
+                                ),
+                                items: List.generate(10, (i) => i + 1)
+                                    .map((f) => DropdownMenuItem(value: f, child: Text('$f Flats')))
+                                    .toList(),
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    controller.updateWingConfig(wing.id, wing.totalFloors, val);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ],
+    );
+  }
+
+  void _showRenameDialog(BuildContext context, WidgetRef ref, String wingId, String currentName) {
+    final controller = TextEditingController(text: currentName);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Rename Wing', style: TypographyScale.headingMedium),
+          content: NivaasTextField(
+            label: 'Wing Name',
+            controller: controller,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newName = controller.text.trim();
+                if (newName.isNotEmpty) {
+                  ref.read(societySetupControllerProvider.notifier).renameWing(wingId, newName);
+                  Navigator.pop(dialogContext);
+                }
+              },
+              child: const Text('Rename'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

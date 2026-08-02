@@ -23,7 +23,9 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
   late TextEditingController _stateController;
   late TextEditingController _pinController;
   late TextEditingController _phoneController;
+  late TextEditingController _emailController;
   late TextEditingController _regController;
+  late TextEditingController _logoController;
 
   @override
   void initState() {
@@ -35,7 +37,9 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
     _stateController = TextEditingController(text: profile.state);
     _pinController = TextEditingController(text: profile.pinCode);
     _phoneController = TextEditingController(text: profile.contactNumber);
+    _emailController = TextEditingController(text: profile.email ?? '');
     _regController = TextEditingController(text: profile.registrationNumber ?? '');
+    _logoController = TextEditingController(text: profile.logoUrl ?? '');
   }
 
   @override
@@ -46,7 +50,9 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
     _stateController.dispose();
     _pinController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
     _regController.dispose();
+    _logoController.dispose();
     super.dispose();
   }
 
@@ -60,7 +66,9 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
       state: _stateController.text.trim(),
       pinCode: _pinController.text.trim(),
       contactNumber: _phoneController.text.trim(),
+      email: _emailController.text.trim(),
       registrationNumber: _regController.text.trim(),
+      logoUrl: _logoController.text.trim(),
     ));
   }
 
@@ -68,6 +76,7 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
   Widget build(BuildContext context) {
     final setupState = ref.watch(societySetupControllerProvider);
     final controller = ref.watch(societySetupControllerProvider.notifier);
+    final profile = setupState.profile;
 
     return ListView(
       padding: const EdgeInsets.all(SpacingSystem.m),
@@ -78,7 +87,7 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
         ),
         const SizedBox(height: SpacingSystem.xs),
         const Text(
-          'Enter basic information about your residential apartment or housing society.',
+          'Enter core information about your residential apartment complex or co-operative society.',
           style: TypographyScale.bodyMedium,
         ),
         const NivaasGap.l(),
@@ -86,11 +95,12 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
           label: 'Society Name *',
           hintText: 'e.g. Green Park Apartments RWA',
           controller: _nameController,
+          errorText: profile.nameValidationError,
           onChanged: (_) => _onFieldChanged(),
         ),
         const NivaasGap.m(),
         NivaasDropdown<SocietyType>(
-          label: 'Society Type *',
+          label: 'Society Category / Type *',
           value: setupState.profile.type,
           items: SocietyType.values
               .map((type) => NivaasDropdownItem(value: type, label: type.displayName))
@@ -101,7 +111,7 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
         ),
         const NivaasGap.m(),
         NivaasTextField(
-          label: 'Address / Street *',
+          label: 'Address / Street Location *',
           hintText: 'e.g. Plot 42, Sector 18, Dwarka',
           controller: _addressController,
           onChanged: (_) => _onFieldChanged(),
@@ -142,18 +152,41 @@ class _Step1SocietyProfileState extends ConsumerState<Step1SocietyProfile> {
             ),
             const SizedBox(width: SpacingSystem.m),
             Expanded(
-              child: NivaasPhoneField(
-                controller: _phoneController,
-                onChanged: (_) => _onFieldChanged(),
+              child: NivaasTextField(
+                label: 'Country',
+                hintText: 'India',
+                enabled: false,
+                controller: TextEditingController(text: 'India'),
               ),
             ),
           ],
         ),
         const NivaasGap.m(),
+        NivaasPhoneField(
+          controller: _phoneController,
+          errorText: profile.phoneValidationError,
+          onChanged: (_) => _onFieldChanged(),
+        ),
+        const NivaasGap.m(),
         NivaasTextField(
-          label: 'Registration Number (Optional)',
+          label: 'Official Email (Optional)',
+          hintText: 'admin@greenparkrwa.in',
+          keyboardType: TextInputType.emailAddress,
+          controller: _emailController,
+          onChanged: (_) => _onFieldChanged(),
+        ),
+        const NivaasGap.m(),
+        NivaasTextField(
+          label: 'RWA Registration Number (Optional)',
           hintText: 'e.g. RWA/DEL/2024/9812',
           controller: _regController,
+          onChanged: (_) => _onFieldChanged(),
+        ),
+        const NivaasGap.m(),
+        NivaasTextField(
+          label: 'Society Logo URL (Optional)',
+          hintText: 'https://example.com/logo.png',
+          controller: _logoController,
           onChanged: (_) => _onFieldChanged(),
         ),
       ],

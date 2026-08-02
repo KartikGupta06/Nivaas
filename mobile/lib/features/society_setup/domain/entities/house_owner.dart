@@ -28,6 +28,7 @@ class HouseOwner extends Equatable {
   final String name;
   final String phone;
   final String? email;
+  final String? emergencyContact;
   final OccupancyStatus status;
 
   const HouseOwner({
@@ -35,8 +36,14 @@ class HouseOwner extends Equatable {
     required this.name,
     required this.phone,
     this.email,
+    this.emergencyContact,
     this.status = OccupancyStatus.ownerOccupied,
   });
+
+  bool get isValidPhone {
+    final regExp = RegExp(r'^[6-9]\d{9}$');
+    return regExp.hasMatch(phone.trim());
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,6 +51,7 @@ class HouseOwner extends Equatable {
       'name': name,
       'phone': phone,
       'email': email,
+      'emergency_contact': emergencyContact,
       'status': status.name,
     };
   }
@@ -54,6 +62,7 @@ class HouseOwner extends Equatable {
       name: json['name'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
       email: json['email'] as String?,
+      emergencyContact: json['emergency_contact'] as String?,
       status: OccupancyStatus.values.firstWhere(
         (e) => e.name == json['status'],
         orElse: () => OccupancyStatus.ownerOccupied,
@@ -62,5 +71,5 @@ class HouseOwner extends Equatable {
   }
 
   @override
-  List<Object?> get props => [flatNumber, name, phone, email, status];
+  List<Object?> get props => [flatNumber, name, phone, email, emergencyContact, status];
 }
