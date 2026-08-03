@@ -5,6 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/design_showcase/presentation/design_showcase_screen.dart';
+import '../../features/resident/presentation/screens/emergency_contacts_screen.dart';
+import '../../features/resident/presentation/screens/family_members_screen.dart';
+import '../../features/resident/presentation/screens/house_details_screen.dart';
+import '../../features/resident/presentation/screens/resident_dashboard_screen.dart';
+import '../../features/resident/presentation/screens/resident_profile_screen.dart';
+import '../../features/resident/presentation/screens/society_info_screen.dart';
+import '../../features/resident/presentation/screens/vehicles_screen.dart';
 import '../../features/society_setup/presentation/screens/society_setup_wizard_screen.dart';
 import '../../shared/widgets/buttons/nivaas_button.dart';
 import '../../shared/widgets/placeholder_view.dart';
@@ -42,13 +49,37 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: RouteNames.auth,
         builder: (context, state) => const LoginScreen(),
       ),
+
+      // Resident Module Routes (Phase 04)
       GoRoute(
         path: RouteNames.residentHome,
-        builder: (context, state) => const PlaceholderView(
-          title: 'Resident Workspace',
-          description: 'Resident Dashboard & Core Features Foundation',
-        ),
+        builder: (context, state) => const ResidentDashboardScreen(),
       ),
+      GoRoute(
+        path: RouteNames.houseDetails,
+        builder: (context, state) => const HouseDetailsScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.residentProfile,
+        builder: (context, state) => const ResidentProfileScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.familyMembers,
+        builder: (context, state) => const FamilyMembersScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.residentVehicles,
+        builder: (context, state) => const VehiclesScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.emergencyContacts,
+        builder: (context, state) => const EmergencyContactsScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.societyInfo,
+        builder: (context, state) => const SocietyInfoScreen(),
+      ),
+
       GoRoute(
         path: RouteNames.adminHome,
         builder: (context, state) => Scaffold(

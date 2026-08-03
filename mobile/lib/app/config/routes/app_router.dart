@@ -1,5 +1,12 @@
 import 'package:go_router/go_router.dart';
 
+import '../../../features/resident/presentation/screens/emergency_contacts_screen.dart';
+import '../../../features/resident/presentation/screens/family_members_screen.dart';
+import '../../../features/resident/presentation/screens/house_details_screen.dart';
+import '../../../features/resident/presentation/screens/resident_dashboard_screen.dart';
+import '../../../features/resident/presentation/screens/resident_profile_screen.dart';
+import '../../../features/resident/presentation/screens/society_info_screen.dart';
+import '../../../features/resident/presentation/screens/vehicles_screen.dart';
 import '../../../shared/models/user_role.dart';
 import '../../../shared/widgets/placeholder_view.dart';
 import '../../observers/app_route_observer.dart';
@@ -29,10 +36,31 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: RouteNames.residentHome,
-          builder: (context, state) => const PlaceholderView(
-            title: 'Resident Dashboard',
-            description: 'Resident Workspace Foundation',
-          ),
+          builder: (context, state) => const ResidentDashboardScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.houseDetails,
+          builder: (context, state) => const HouseDetailsScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.residentProfile,
+          builder: (context, state) => const ResidentProfileScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.familyMembers,
+          builder: (context, state) => const FamilyMembersScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.residentVehicles,
+          builder: (context, state) => const VehiclesScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.emergencyContacts,
+          builder: (context, state) => const EmergencyContactsScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.societyInfo,
+          builder: (context, state) => const SocietyInfoScreen(),
         ),
         GoRoute(
           path: RouteNames.adminHome,
