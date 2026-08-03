@@ -7,6 +7,13 @@ import '../../../features/resident/presentation/screens/resident_dashboard_scree
 import '../../../features/resident/presentation/screens/resident_profile_screen.dart';
 import '../../../features/resident/presentation/screens/society_info_screen.dart';
 import '../../../features/resident/presentation/screens/vehicles_screen.dart';
+import '../../../features/visitor/presentation/screens/delivery_entry_screen.dart';
+import '../../../features/visitor/presentation/screens/emergency_entry_screen.dart';
+import '../../../features/visitor/presentation/screens/frequent_visitors_screen.dart';
+import '../../../features/visitor/presentation/screens/visitor_approval_screen.dart';
+import '../../../features/visitor/presentation/screens/visitor_history_screen.dart';
+import '../../../features/visitor/presentation/screens/visitor_registration_screen.dart';
+import '../../../features/visitor/presentation/screens/watchman_dashboard_screen.dart';
 import '../../../shared/models/user_role.dart';
 import '../../../shared/widgets/placeholder_view.dart';
 import '../../observers/app_route_observer.dart';
@@ -71,10 +78,36 @@ abstract class AppRouter {
         ),
         GoRoute(
           path: RouteNames.watchmanHome,
-          builder: (context, state) => const PlaceholderView(
-            title: 'Gate Security Stream',
-            description: 'Watchman High-Contrast Workspace Foundation',
-          ),
+          builder: (context, state) => const WatchmanDashboardScreen(),
+        ),
+
+        // Visitor Module Routes (Phase 05)
+        GoRoute(
+          path: RouteNames.visitorRegister,
+          builder: (context, state) => const VisitorRegistrationScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.deliveryEntry,
+          builder: (context, state) => const DeliveryEntryScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.frequentVisitors,
+          builder: (context, state) => const FrequentVisitorsScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.emergencyEntry,
+          builder: (context, state) => const EmergencyEntryScreen(),
+        ),
+        GoRoute(
+          path: RouteNames.visitorHistory,
+          builder: (context, state) {
+            final status = state.uri.queryParameters['status'];
+            return VisitorHistoryScreen(initialStatus: status);
+          },
+        ),
+        GoRoute(
+          path: RouteNames.visitorApproval,
+          builder: (context, state) => const VisitorApprovalScreen(),
         ),
       ],
     );
